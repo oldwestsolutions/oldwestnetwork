@@ -1,165 +1,186 @@
 'use client';
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { FaGamepad, FaUsers, FaStar, FaHeart, FaTv, FaCar, FaCube, FaRunning, FaMusic, FaUserFriends, FaFilm, FaBell, FaCrown } from 'react-icons/fa';
-import { SiRoblox } from 'react-icons/si';
+import { useState } from 'react';
+import { FaHeart, FaRegHeart, FaEye, FaUserFriends, FaGamepad, FaFilm, FaMusic, FaCar, FaCube, FaRunning, FaGlobe, FaBell, FaEnvelope, FaTrophy, FaChartLine, FaCrown } from 'react-icons/fa';
 
 export default function Legend() {
+  const [activeTab, setActiveTab] = useState('home');
+
+  const stats = {
+    followers: 1250,
+    following: 850,
+    totalViews: 25000,
+    totalLikes: 1200,
+    streams: 45,
+    hoursWatched: 120
+  };
+
+  const friends = [
+    { id: 1, name: "GamingPro", status: "Playing Baldur's Gate 3", isOnline: true },
+    { id: 2, name: "TravelVibes", status: "Streaming IRL", isOnline: true },
+    { id: 3, name: "SpeedRunner", status: "Playing Minecraft", isOnline: true },
+    { id: 4, name: "MusicMaster", status: "Offline", isOnline: false },
+    { id: 5, name: "MovieBuff", status: "Watching Movies", isOnline: true },
+  ];
+
+  const recentMessages = [
+    { id: 1, sender: "GamingPro", message: "Hey, want to play some games later?", time: "2m ago", unread: true },
+    { id: 2, sender: "TravelVibes", message: "Check out my new stream!", time: "15m ago", unread: true },
+    { id: 3, sender: "SpeedRunner", message: "New PB achieved!", time: "1h ago", unread: false },
+  ];
+
+  const recentLikes = [
+    { id: 1, user: "GamingPro", action: "liked your stream", time: "5m ago" },
+    { id: 2, user: "TravelVibes", action: "followed you", time: "1h ago" },
+    { id: 3, user: "SpeedRunner", action: "commented on your stream", time: "2h ago" },
+  ];
+
+  const topGames = [
+    { id: 1, name: "Baldur's Gate 3", viewers: 12500, thumbnail: "https://via.placeholder.com/150" },
+    { id: 2, name: "Minecraft", viewers: 8500, thumbnail: "https://via.placeholder.com/150" },
+    { id: 3, name: "Valorant", viewers: 7500, thumbnail: "https://via.placeholder.com/150" },
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-900">
-      {/* Welcome Section */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center space-x-4">
-            <div className="relative h-16 w-16 rounded-full overflow-hidden">
-              <Image
-                src="https://picsum.photos/seed/avatar/200/200"
-                alt="Profile"
-                fill
-                className="object-cover"
-              />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-white">Welcome back, Legend!</h1>
-              <p className="text-gray-400">Check out what's new in your favorite categories</p>
-            </div>
-          </div>
-          <div className="flex items-center space-x-4">
-            <button className="flex items-center space-x-2 bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors">
-              <FaBell className="text-red-500" />
-              <span>Notifications</span>
-            </button>
-            <button className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors">
-              <FaCrown className="text-yellow-400" />
-              <span>Go Live</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Followed Channels */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center space-x-2">
-            <FaHeart className="text-red-500 text-2xl" />
-            <h2 className="text-2xl font-bold text-white">Followed Channels</h2>
-          </div>
-          <Link href="/channels" className="text-red-500 hover:text-red-400">
-            View All
-          </Link>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="bg-gray-800 rounded-lg overflow-hidden hover:bg-gray-700 transition-colors">
-              <div className="relative h-32">
-                <Image
-                  src={`https://picsum.photos/seed/followed${i}/300/300`}
-                  alt={`Followed Channel ${i}`}
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute bottom-2 left-2 bg-red-600 text-white text-sm px-2 py-1 rounded">
-                  LIVE
+    <div className="min-h-screen bg-gray-900 text-white">
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Left Sidebar */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* Profile Card */}
+            <div className="bg-gray-800 rounded-lg p-4">
+              <div className="flex items-center space-x-4">
+                <div className="h-16 w-16 rounded-full bg-gray-700 flex items-center justify-center text-2xl">
+                  L
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold">Legend</h3>
+                  <p className="text-gray-400">@legendarygamer</p>
                 </div>
               </div>
-              <div className="p-2">
-                <h3 className="text-white text-sm font-medium truncate">Channel Name {i}</h3>
-                <p className="text-gray-400 text-xs">1.2K viewers</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Recommended For You */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center space-x-2">
-            <FaStar className="text-red-500 text-2xl" />
-            <h2 className="text-2xl font-bold text-white">Recommended For You</h2>
-          </div>
-          <Link href="/recommended" className="text-red-500 hover:text-red-400">
-            View All
-          </Link>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-gray-800 rounded-lg overflow-hidden">
-              <div className="relative h-48">
-                <Image
-                  src={`https://picsum.photos/seed/recommended${i}/800/450`}
-                  alt={`Recommended Stream ${i}`}
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute bottom-2 left-2 bg-red-600 text-white text-sm px-2 py-1 rounded">
-                  LIVE
+              <div className="mt-4 grid grid-cols-2 gap-4">
+                <div className="text-center">
+                  <p className="text-2xl font-bold">{stats.followers}</p>
+                  <p className="text-gray-400">Followers</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-bold">{stats.following}</p>
+                  <p className="text-gray-400">Following</p>
                 </div>
               </div>
-              <div className="p-4">
-                <div className="flex items-center space-x-3">
-                  <div className="relative h-10 w-10 rounded-full overflow-hidden">
-                    <Image
-                      src={`https://picsum.photos/seed/avatar${i}/100/100`}
-                      alt={`Streamer ${i}`}
-                      fill
-                      className="object-cover"
-                    />
+            </div>
+
+            {/* Friends List */}
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h3 className="text-lg font-semibold mb-4">Friends</h3>
+              <div className="space-y-3">
+                {friends.map((friend) => (
+                  <div key={friend.id} className="flex items-center space-x-3">
+                    <div className="h-10 w-10 rounded-full bg-gray-700 flex items-center justify-center">
+                      {friend.name.charAt(0)}
+                    </div>
+                    <div>
+                      <p className="font-medium">{friend.name}</p>
+                      <p className="text-sm text-gray-400">{friend.status}</p>
+                    </div>
+                    {friend.isOnline && (
+                      <div className="ml-auto w-2 h-2 bg-green-500 rounded-full"></div>
+                    )}
                   </div>
-                  <div>
-                    <h3 className="text-white font-medium">Stream Title {i}</h3>
-                    <p className="text-gray-400 text-sm">Streamer Name {i}</p>
-                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Main Content Area */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Stats Overview */}
+            <div className="bg-gray-800 rounded-lg p-6">
+              <h2 className="text-xl font-bold mb-4">Your Stats</h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="bg-gray-700 rounded-lg p-4 text-center">
+                  <FaEye className="h-6 w-6 text-red-500 mx-auto mb-2" />
+                  <p className="text-2xl font-bold">{stats.totalViews}</p>
+                  <p className="text-gray-400">Total Views</p>
                 </div>
-                <div className="mt-2 flex items-center text-gray-400 text-sm">
-                  <span>Game Name</span>
-                  <span className="mx-2">•</span>
-                  <span>1.2K viewers</span>
+                <div className="bg-gray-700 rounded-lg p-4 text-center">
+                  <FaHeart className="h-6 w-6 text-red-500 mx-auto mb-2" />
+                  <p className="text-2xl font-bold">{stats.totalLikes}</p>
+                  <p className="text-gray-400">Total Likes</p>
+                </div>
+                <div className="bg-gray-700 rounded-lg p-4 text-center">
+                  <FaTrophy className="h-6 w-6 text-red-500 mx-auto mb-2" />
+                  <p className="text-2xl font-bold">{stats.streams}</p>
+                  <p className="text-gray-400">Streams</p>
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-      </div>
 
-      {/* Recent Activity */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center space-x-2">
-            <FaUsers className="text-red-500 text-2xl" />
-            <h2 className="text-2xl font-bold text-white">Recent Activity</h2>
-          </div>
-          <Link href="/activity" className="text-red-500 hover:text-red-400">
-            View All
-          </Link>
-        </div>
-        <div className="bg-gray-800 rounded-lg p-6">
-          <div className="space-y-4">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="flex items-center space-x-4">
-                <div className="relative h-10 w-10 rounded-full overflow-hidden">
-                  <Image
-                    src={`https://picsum.photos/seed/activity${i}/100/100`}
-                    alt={`Activity ${i}`}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div className="flex-1">
-                  <p className="text-white">
-                    <span className="font-medium">Streamer Name {i}</span> started streaming <span className="text-red-500">Game Name {i}</span>
-                  </p>
-                  <p className="text-gray-400 text-sm">2 hours ago</p>
-                </div>
-                <button className="text-red-500 hover:text-red-400">
-                  Watch Now
-                </button>
+            {/* Recent Activity */}
+            <div className="bg-gray-800 rounded-lg p-6">
+              <h2 className="text-xl font-bold mb-4">Recent Activity</h2>
+              <div className="space-y-4">
+                {recentLikes.map((like) => (
+                  <div key={like.id} className="flex items-center space-x-3">
+                    <div className="h-10 w-10 rounded-full bg-gray-700 flex items-center justify-center">
+                      {like.user.charAt(0)}
+                    </div>
+                    <div>
+                      <p className="font-medium">{like.user}</p>
+                      <p className="text-sm text-gray-400">{like.action}</p>
+                    </div>
+                    <span className="ml-auto text-sm text-gray-400">{like.time}</span>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+          </div>
+
+          {/* Right Sidebar */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* Messages */}
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h3 className="text-lg font-semibold mb-4">Messages</h3>
+              <div className="space-y-3">
+                {recentMessages.map((msg) => (
+                  <div key={msg.id} className="flex items-center space-x-3">
+                    <div className="h-10 w-10 rounded-full bg-gray-700 flex items-center justify-center">
+                      {msg.sender.charAt(0)}
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-medium">{msg.sender}</p>
+                      <p className="text-sm text-gray-400 truncate">{msg.message}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-gray-400">{msg.time}</p>
+                      {msg.unread && (
+                        <div className="w-2 h-2 bg-red-500 rounded-full ml-auto"></div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Top Games */}
+            <div className="bg-gray-800 rounded-lg p-4">
+              <h3 className="text-lg font-semibold mb-4">Top Games</h3>
+              <div className="space-y-4">
+                {topGames.map((game) => (
+                  <div key={game.id} className="flex items-center space-x-3">
+                    <img src={game.thumbnail} alt={game.name} className="h-12 w-12 rounded" />
+                    <div>
+                      <p className="font-medium">{game.name}</p>
+                      <p className="text-sm text-gray-400">{game.viewers.toLocaleString()} viewers</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 } 
