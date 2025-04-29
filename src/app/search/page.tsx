@@ -1,15 +1,25 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { FaSearch, FaUser, FaGamepad, FaFilm, FaMusic, FaTv, FaCar, FaCube, FaFutbol, FaVideo } from 'react-icons/fa';
+
+interface SearchResult {
+  id: number;
+  title: string;
+  streamer: string;
+  viewers: number;
+  thumbnail: string;
+  category: string;
+  icon: React.ReactNode;
+}
 
 // SearchResults component that uses useSearchParams
 function SearchResults() {
   const searchParams = useSearchParams();
   const query = searchParams.get('q') || '';
   const [searchQuery, setSearchQuery] = useState(query);
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -23,7 +33,7 @@ function SearchResults() {
     setIsLoading(true);
     // Simulate API call
     setTimeout(() => {
-      const results = [
+      const results: SearchResult[] = [
         {
           id: 1,
           title: `Streamer playing ${query}`,
