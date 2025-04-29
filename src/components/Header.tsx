@@ -12,6 +12,7 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
 
   useEffect(() => {
@@ -47,6 +48,13 @@ export default function Header() {
     router.push('/');
   };
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
+
   return (
     <header 
       className={`fixed top-0 left-0 right-0 z-50 bg-gray-900 border-b border-gray-800 transition-transform duration-300 ${
@@ -72,14 +80,18 @@ export default function Header() {
           {/* Search and User Actions */}
           <div className="flex items-center space-x-4">
             {/* Search - Hidden on mobile */}
-            <div className="relative hidden md:block">
+            <form onSubmit={handleSearch} className="relative hidden md:block">
               <input
                 type="text"
                 placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="bg-gray-800 text-white pl-10 pr-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 w-64"
               />
-              <FaSearch className="absolute left-3 top-2.5 text-gray-400" />
-            </div>
+              <button type="submit" className="absolute left-3 top-2.5 text-gray-400 hover:text-white">
+                <FaSearch className="h-5 w-5" />
+              </button>
+            </form>
             
             {/* Notifications - Hidden on mobile */}
             <button className="hidden md:block text-gray-300 hover:text-white">
@@ -120,6 +132,14 @@ export default function Header() {
                       >
                         <FaUser className="mr-3" />
                         Dashboard
+                      </Link>
+                      <Link 
+                        href="/account" 
+                        className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white"
+                        onClick={() => setIsProfileOpen(false)}
+                      >
+                        <FaUser className="mr-3" />
+                        Account
                       </Link>
                       <Link 
                         href="/settings" 
