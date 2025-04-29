@@ -1,12 +1,36 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
-import { FaSearch, FaBell, FaUser, FaCog, FaSignInAlt, FaUserCircle } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { FaSearch, FaBell, FaUser, FaCog, FaSignInAlt, FaUserCircle, FaSignOutAlt } from 'react-icons/fa';
 import { IoCloud } from 'react-icons/io5';
 
 export default function Header() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    // Check authentication status on mount and when it changes
+    const checkAuth = () => {
+      const auth = localStorage.getItem('isAuthenticated') === 'true';
+      setIsAuthenticated(auth);
+    };
+
+    checkAuth();
+    // Listen for storage changes
+    window.addEventListener('storage', checkAuth);
+    return () => window.removeEventListener('storage', checkAuth);
+  }, []);
+
+  const handleSignOut = () => {
+    localStorage.removeItem('isAuthenticated');
+    document.cookie = 'isAuthenticated=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    setIsAuthenticated(false);
+    setIsProfileOpen(false);
+    router.push('/');
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-gray-900 border-b border-gray-800">
@@ -48,18 +72,51 @@ export default function Header() {
                     <div className="flex items-center space-x-3">
                       <FaUserCircle className="h-8 w-8 text-gray-400" />
                       <div>
-                        <p className="text-sm font-medium text-white">Guest</p>
-                        <p className="text-xs text-gray-400">Not signed in</p>
+                        <p className="text-sm font-medium text-white">
+                          {isAuthenticated ? 'Legend' : 'Guest'}
+                        </p>
+                        <p className="text-xs text-gray-400">
+                          {isAuthenticated ? '@legendarygamer' : 'Not signed in'}
+                        </p>
                       </div>
                     </div>
                   </div>
-                  <Link 
-                    href="/login" 
-                    className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white"
-                  >
-                    <FaSignInAlt className="mr-3" />
-                    Sign In
-                  </Link>
+                  {isAuthenticated ? (
+                    <>
+                      <Link 
+                        href="/legend" 
+                        className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white"
+                        onClick={() => setIsProfileOpen(false)}
+                      >
+                        <FaUser className="mr-3" />
+                        Dashboard
+                      </Link>
+                      <Link 
+                        href="/settings" 
+                        className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white"
+                        onClick={() => setIsProfileOpen(false)}
+                      >
+                        <FaCog className="mr-3" />
+                        Settings
+                      </Link>
+                      <button
+                        onClick={handleSignOut}
+                        className="flex items-center w-full px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white"
+                      >
+                        <FaSignOutAlt className="mr-3" />
+                        Sign Out
+                      </button>
+                    </>
+                  ) : (
+                    <Link 
+                      href="/login" 
+                      className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white"
+                      onClick={() => setIsProfileOpen(false)}
+                    >
+                      <FaSignInAlt className="mr-3" />
+                      Sign In
+                    </Link>
+                  )}
                 </div>
               )}
             </div>
