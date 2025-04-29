@@ -3,12 +3,15 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { FaSearch, FaBell, FaUser, FaCog, FaSignInAlt, FaUserCircle, FaSignOutAlt } from 'react-icons/fa';
+import { FaSearch, FaBell, FaUser, FaCog, FaSignInAlt, FaUserCircle, FaSignOutAlt, FaBars } from 'react-icons/fa';
 import { IoCloud } from 'react-icons/io5';
 
 export default function Header() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -19,10 +22,22 @@ export default function Header() {
     };
 
     checkAuth();
-    // Listen for storage changes
     window.addEventListener('storage', checkAuth);
-    return () => window.removeEventListener('storage', checkAuth);
-  }, []);
+
+    // Handle scroll behavior
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      setIsScrolled(currentScrollY > lastScrollY && currentScrollY > 100);
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('storage', checkAuth);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [lastScrollY]);
 
   const handleSignOut = () => {
     localStorage.removeItem('isAuthenticated');
@@ -33,11 +48,21 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-gray-900 border-b border-gray-800">
+    <header 
+      className={`fixed top-0 left-0 right-0 z-50 bg-gray-900 border-b border-gray-800 transition-transform duration-300 ${
+        isScrolled ? '-translate-y-full' : 'translate-y-0'
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
+          {/* Logo and Mobile Menu Button */}
           <div className="flex items-center">
+            <button 
+              className="md:hidden mr-4 text-gray-300 hover:text-white"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              <FaBars className="h-6 w-6" />
+            </button>
             <Link href="/" className="flex items-center">
               <IoCloud className="h-8 w-8 text-red-500" />
               <span className="ml-2 text-xl font-bold text-white">OldWest</span>
@@ -46,7 +71,8 @@ export default function Header() {
 
           {/* Search and User Actions */}
           <div className="flex items-center space-x-4">
-            <div className="relative">
+            {/* Search - Hidden on mobile */}
+            <div className="relative hidden md:block">
               <input
                 type="text"
                 placeholder="Search..."
@@ -54,9 +80,13 @@ export default function Header() {
               />
               <FaSearch className="absolute left-3 top-2.5 text-gray-400" />
             </div>
-            <button className="text-gray-300 hover:text-white">
+            
+            {/* Notifications - Hidden on mobile */}
+            <button className="hidden md:block text-gray-300 hover:text-white">
               <FaBell className="h-6 w-6" />
             </button>
+
+            {/* Profile Button */}
             <div className="relative">
               <button 
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
@@ -122,6 +152,42 @@ export default function Header() {
             </div>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden bg-gray-800 border-t border-gray-700">
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              <Link 
+                href="/" 
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Home
+              </Link>
+              <Link 
+                href="/browse" 
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Browse
+              </Link>
+              <Link 
+                href="/community" 
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Community
+              </Link>
+              <Link 
+                href="/tournaments" 
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Tournaments
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
     </header>
   );
