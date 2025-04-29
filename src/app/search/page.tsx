@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { FaSearch, FaFilter, FaGamepad, FaUser, FaVideo } from 'react-icons/fa';
 
@@ -22,7 +22,7 @@ interface SearchResult {
   duration?: string;
 }
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const query = searchParams.get('q') || '';
@@ -214,5 +214,27 @@ export default function SearchPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-900 pt-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="animate-pulse">
+            <div className="h-12 bg-gray-800 rounded-lg mb-6"></div>
+            <div className="h-8 bg-gray-800 rounded-lg w-1/3 mb-8"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="bg-gray-800 rounded-lg h-64"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    }>
+      <SearchContent />
+    </Suspense>
   );
 } 
